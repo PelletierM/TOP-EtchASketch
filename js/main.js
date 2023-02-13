@@ -5,7 +5,7 @@ let backgroundColor = "#ffffff";
 let drawColor = "#00ff00";
 let eraserIsActive = false;
 let gridSize = 10 ;
-let gridSizeTemp = 00;
+let gridSizeTemp = 0;
 
 let clickHold = false;
 document.addEventListener("mousedown", function(e){
@@ -19,6 +19,9 @@ document.addEventListener("mouseup", function(e){
 document.addEventListener("mouseleave", function(e){
     clickHold = false;
 })
+document.addEventListener("dragstart", function(e){
+    e.preventDefault();
+}) // This prevents grid elements dragging, which could alter drawing
 
 let eraser = document.querySelector(".eraser");
 eraser.addEventListener("click", function(e){
@@ -28,11 +31,13 @@ eraser.addEventListener("click", function(e){
 let resetButton = document.querySelector(".reset");
 resetButton.addEventListener("click", function(e){
         resizeGrid();
+        enableDrawing();
     })
 
 let gridSizeSlider = document.querySelector(".slider");
 gridSizeSlider.addEventListener("input", function(e) {
         resizeGrid()
+        gridSizeTemp = 0;
     })
 
 let showGridToggle = document.querySelector(".showGridToggle");
@@ -93,6 +98,8 @@ function enableDrawing() {
             }    
         })    
     })
+    if (showGrid) {grid.style.gap = "1px"}
+    else {grid.style.gap ="0px"}
 }
 
 resizeGrid();
