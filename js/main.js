@@ -1,16 +1,19 @@
 let grid = document.querySelector(".grid");
-let gridElements = [];
+let gridCells = [];
 let eraserIsActive = false;
 let gridSize = 10 ;
 let gridSizeTemp = 0;
 
-// COLOR OPTIONS
-let chosenHoverColor = "#cccccc";
-let backgroundColor = "rgb(255, 255, 255)";
-let drawColor = "#000000";
+// COLOR OPTIONS AND MODE TOGGLES
+let chosenHoverColor = "rgb(192, 192, 192)";
+let cellBackgroundColor = "rgb(255, 255, 255)";
+let gridBackgroundColor = "rgb(128, 128, 128)";
+let drawColor = "rgb(0, 0, 0)";
 let normalMode = true;
-let darkenMode = false;
-let colorChangeValue = 10;
+let randomMode = false;
+let shaderMode = false;
+let colorPickerMode = false;
+let colorChangeValue = 0;
 
 function hexToRGB(hex) {
     let r = parseInt(hex.slice(1, 3), 16);
@@ -19,20 +22,58 @@ function hexToRGB(hex) {
     return ("rgb(" + r + ", " + g + ", " + b + ")")
 }
 
+function rgbStringToArray(rgbString) {return rgbString.split(")").join("").split(")").join("").split(" ").join("").split("(")[1].split(",")};
+function rgbArrayToHexString(rgbArray) {
+    let r = parseInt(rgbArray[0]).toString(16);
+    let g = parseInt(rgbArray[1]).toString(16);
+    let b = parseInt(rgbArray[2]).toString(16);
+    if (r.length == 1) {r = "0" + r}
+    if (g.length == 1) {g = "0" + g}
+    if (b.length == 1) {b = "0" + b}
+    return ("#" + r + g + b)
+}
+
 let colorPicker = document.querySelector(".colorPicker");
 colorPicker.addEventListener("input", function(e){
     drawColor = hexToRGB(e.target.value)
 })
 
-let backgroundColorPicker = document.querySelector(".backgroundColorPicker");
-backgroundColorPicker.addEventListener("input", function(e){
-    backgroundColor = hexToRGB(e.target.value)
-    console.log(backgroundColor)
-    gridElements.forEach(function(gridElement){
-        if (gridElement.classList.contains("empty")){
-            gridElement.style.cssText = "background-color : " + backgroundColor + "; transition : 0s;"
+let cellBackgroundColorPicker = document.querySelector(".cellBackgroundColorPicker");
+cellBackgroundColorPicker.addEventListener("input", function(e){
+    cellBackgroundColor = hexToRGB(e.target.value)
+    gridCells.forEach(function(gridCell){
+        if (gridCell.classList.contains("empty")){
+            gridCell.style.cssText = "background-color : " + cellBackgroundColor + "; transition : 0s;"
         }
     })
+    function changeColor(array, divider) {
+        let r = parseInt(array[0]);
+        let g = parseInt(array[1]);
+        let b = parseInt(array[2]);
+        let modifier = 0
+        if (r > g && r > b) {modifier = r}
+        else if (g > r && g > b) {modifier = g}
+        else {modifier = b}
+        if (modifier < 128) {modifier = Math.floor((255 - modifier) / divider)
+            r = r + modifier;
+            g = g + modifier;
+            b = b + modifier;   
+        }
+        else {modifier = Math.floor(modifier / divider)
+            r = r - modifier;
+            g = g - modifier;
+            b = b - modifier;
+        }
+        if (r < 0) {r = 0};
+        if (g < 0) {g = 0};
+        if (b < 0) {b = 0};
+        return [r, g, b]
+    }
+    let tempArray1 = changeColor(rgbStringToArray(cellBackgroundColor), 2)
+    gridBackgroundColor = "rgb(" + tempArray1[0] + ", " + tempArray1[1] + ", " + tempArray1[2] + ")";
+    grid.style.backgroundColor = gridBackgroundColor;
+    let tempArray2 = changeColor(rgbStringToArray(cellBackgroundColor), 4)
+    chosenHoverColor = "rgb(" + tempArray2[0] + ", " + tempArray2[1] + ", " + tempArray2[2] + ")";
 })
 
 function generateRandomColor(){
@@ -42,39 +83,42 @@ function generateRandomColor(){
 let normalModeToggle = document.querySelector(".normalMode");
 normalModeToggle.addEventListener("click", function(e){
     normalMode = true;
-    darkenMode = false;
-    lightenMode = false;
+    randomMode = false;
+    shaderMode = false;
+    colorPickerMode = false;
     drawColor = colorPicker.value;
 })
 
 let randomModeToggle = document.querySelector(".randomMode");
 randomModeToggle.addEventListener("click", function(e){
     normalMode = false;
-    darkenMode = false;
-    lightenMode = false;
+    randomMode = true;
+    shaderMode = false;
+    colorPickerMode = false;
 })
 
-let darkenModeToggle = document.querySelector(".darkenMode");
-darkenModeToggle.addEventListener("click", function(e){
+let shaderModeToggle = document.querySelector(".shaderMode");
+shaderModeToggle.addEventListener("click", function(e){
     normalMode = false;
-    darkenMode = true;
-    lightenMode = false;
+    randomMode = false;
+    shaderMode = true;
+    colorPickerMode = false;
 })
 
-let lightenModeToggle = document.querySelector(".lightenMode");
-lightenModeToggle.addEventListener("click", function(e){
+let colorPickerModeToggle = document.querySelector(".colorPickerMode");
+colorPickerModeToggle.addEventListener("click", function(e){
     normalMode = false;
-    darkenMode = false;
-    lightenMode = true;
+    randomMode = false;
+    shaderMode = false;
+    colorPickerMode = true;
 })
 
 let colorChangeSlider = document.querySelector(".colorChangeSlider");
 let colorChangeSliderText = document.querySelector(".colorChangeSliderText")
 colorChangeSlider.addEventListener("input", function(e) {
         colorChangeValue = Math.floor(colorChangeSlider.value / 100 * 255); 
-        colorChangeSliderText.textContent = colorChangeSlider.value + " %";
+        colorChangeSliderText.textContent = Math.abs(colorChangeSlider.value) + " %";
     })
-
 
 // CLICK LISTENERS
 let clickHold = false;
@@ -127,107 +171,73 @@ function resizeGrid(){
     grid.innerHTML = "";
     for (i = 0; i < (gridSize * gridSize); i++) {
         let div = document.createElement("div");
-        div.classList.add("gridElement", "empty")
+        div.classList.add("gridCell", "empty")
         grid.appendChild(div)
     }
     grid.style.cssText = "grid-template-columns : repeat(" + gridSize + ", 1fr); grid-template-rows : repeat(" + gridSize + ", 1fr)";
-    gridElements = document.querySelectorAll(".gridElement");
-    gridElements.forEach(function(gridElement) {
-        gridElement.style.cssText = "background-color : " + backgroundColor + ";";
+    gridCells = document.querySelectorAll(".gridCell");
+    gridCells.forEach(function(gridCell) {
+        gridCell.style.cssText = "background-color : " + cellBackgroundColor + ";";
     })
+    grid.style.backgroundColor = gridBackgroundColor;
 }
 
 function enableDrawing() {
-    gridElements.forEach(function(gridElement) {
-        function mouseOverHover() {
-            if (clickHold) {
-                if (eraserIsActive) {gridElement.style.cssText = "background-color : " + backgroundColor + "; transition : 0s;";
-                    gridElement.classList.remove("filled");
-                    gridElement.classList.add("empty");
-                }
-                else if (normalMode === true) {gridElement.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
-                    gridElement.classList.remove("empty")
-                    gridElement.classList.add("filled")
-                }
-
-                // This reads current color value and darkens or lightens it by 10%
-                else if (normalMode === false && (darkenMode === true || lightenMode === true)) {
-                    let currentColor = gridElement.style.backgroundColor;
-                    if (gridElement.classList.contains("empty")) {
-                        currentColor = backgroundColor
-                    }
-                    let currentColorArray = currentColor.split(")").join("").split(")").join("").split(" ").join("").split("(")[1].split(",");
-                    let colorModifier = 0;
-                    if (darkenMode === true) {colorModifier = 0 - colorChangeValue}
-                    else {colorModifier = colorChangeValue}
-                    for (i = 0; i < currentColorArray.length; i++) {
-                        currentColorArray[i] = +currentColorArray[i] + colorModifier;
-                        if (currentColorArray[i] > 255){currentColorArray[i] = 255}
-                        else if (currentColorArray[i] < 0) {currentColorArray[i] = 0}
-                    }
-                    gridElement.style.cssText = "background-color : rgb(" + currentColorArray[0] + ", " + currentColorArray[1] + ", " + currentColorArray[2] + "); transition : 0s;"
-                    gridElement.classList.remove("empty")
-                    gridElement.classList.add("filled")
-                    if ("rgb(" + currentColorArray[0] + ", " + currentColorArray[1] + ", " + currentColorArray[2] + ")" == backgroundColor) {
-                        gridElement.classList.remove("filled")
-                        gridElement.classList.add("empty")
-                    }
-                }
-                else {generateRandomColor();
-                    gridElement.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
-                    gridElement.classList.remove("empty")
-                    gridElement.classList.add("filled")
-                }
+    gridCells.forEach(function(gridCell) {
+        
+        function selectDrawingCondition(){
+            if (eraserIsActive) {gridCell.style.cssText = "background-color : " + cellBackgroundColor + "; transition : 0s;";
+                gridCell.classList.remove("filled");
+                gridCell.classList.add("empty");
             }
-            else if (gridElement.classList.contains("filled")){}
-            else {gridElement.style.cssText = "background-color : " + chosenHoverColor + "; transition : 0.1s;"};
-        }
-        function mouseOutHover() {
-            if (gridElement.classList.contains("filled")) {}
-            else {gridElement.style.cssText = "background-color : " + backgroundColor + "; transition : 0.3s;"};
-        }
-
-        gridElement.addEventListener("mouseover", mouseOverHover) 
-        gridElement.addEventListener("mouseout", mouseOutHover);
-
-        gridElement.addEventListener("mousedown", function(e){
-            if (eraserIsActive) {gridElement.style.cssText = "background-color : " + backgroundColor + "; transition : 0s;";
-                gridElement.classList.remove("filled");
-                gridElement.classList.add("empty");
+            else if (normalMode === true) {gridCell.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
+                gridCell.classList.remove("empty")
+                gridCell.classList.add("filled")
             }
-            else if (normalMode === true) {gridElement.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
-                gridElement.classList.remove("empty")
-                gridElement.classList.add("filled")
+            else if (randomMode === true) {generateRandomColor();
+                gridCell.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
+                gridCell.classList.remove("empty")
+                gridCell.classList.add("filled")
             }
             // This reads current color value and darkens or lightens it by 10%
-            else if (normalMode === false && (darkenMode === true || lightenMode === true)) {
-                let currentColor = gridElement.style.backgroundColor;
-                if (gridElement.classList.contains("empty")) {
-                    currentColor = backgroundColor
+            else if (shaderMode === true) {
+                let currentColor = gridCell.style.backgroundColor;
+                if (gridCell.classList.contains("empty")) {
+                    currentColor = cellBackgroundColor
                 }
-                let currentColorArray = currentColor.split(")").join("").split(")").join("").split(" ").join("").split("(")[1].split(",");
-                let colorModifier = 0;
-                if (darkenMode === true) {colorModifier = 0 - colorChangeValue}
-                else {colorModifier = colorChangeValue}
+                let currentColorArray = rgbStringToArray(currentColor);
                 for (i = 0; i < currentColorArray.length; i++) {
-                    currentColorArray[i] = +currentColorArray[i] + colorModifier;
+                    currentColorArray[i] = +currentColorArray[i] + colorChangeValue;
                     if (currentColorArray[i] > 255){currentColorArray[i] = 255}
                     else if (currentColorArray[i] < 0) {currentColorArray[i] = 0}
                 }
-                gridElement.style.cssText = "background-color : rgb(" + currentColorArray[0] + ", " + currentColorArray[1] + ", " + currentColorArray[2] + "); transition : 0s;"
-                gridElement.classList.remove("empty")
-                gridElement.classList.add("filled")
-                if ("rgb(" + currentColorArray[0] + ", " + currentColorArray[1] + ", " + currentColorArray[2] + ")" == backgroundColor) {
-                    gridElement.classList.remove("filled")
-                    gridElement.classList.add("empty")
+                gridCell.style.cssText = "background-color : rgb(" + currentColorArray[0] + ", " + currentColorArray[1] + ", " + currentColorArray[2] + "); transition : 0s;"
+                gridCell.classList.remove("empty")
+                gridCell.classList.add("filled")
+                if ("rgb(" + currentColorArray[0] + ", " + currentColorArray[1] + ", " + currentColorArray[2] + ")" == cellBackgroundColor) {
+                    gridCell.classList.remove("filled")
+                    gridCell.classList.add("empty")
                 }
             }
-            else {generateRandomColor();
-                gridElement.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
-                gridElement.classList.remove("empty")
-                gridElement.classList.add("filled")
-            }  
-        })    
+            else if (colorPickerMode === true) {colorPicker.value = rgbArrayToHexString(rgbStringToArray(gridCell.style.backgroundColor))
+                drawColor = gridCell.style.backgroundColor
+            }
+        }
+
+        function mouseOverHover() {
+            if (clickHold) {selectDrawingCondition()}
+            else if (gridCell.classList.contains("filled")){}
+            else {gridCell.style.cssText = "background-color : " + chosenHoverColor + "; transition : 0.1s;"};
+        }
+
+        function mouseOutHover() {
+            if (gridCell.classList.contains("filled")) {}
+            else {gridCell.style.cssText = "background-color : " + cellBackgroundColor + "; transition : 0.3s;"};
+        }
+
+        gridCell.addEventListener("mouseover", mouseOverHover) 
+        gridCell.addEventListener("mouseout", mouseOutHover);
+        gridCell.addEventListener("mousedown", function(e){selectDrawingCondition()})    
     })
     if (showGrid) {grid.style.gap = "1px"}
     else {grid.style.gap ="0px"}

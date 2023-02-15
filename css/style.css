@@ -20,7 +20,7 @@
     max-height: 500px;
     display:grid;
     gap: 1px;
-    background-color:grey;
+    background-color: rgb(128, 128, 128);
     border-width:2px;
     border-color:black;
     border-style:solid;
