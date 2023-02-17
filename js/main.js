@@ -44,6 +44,19 @@ let drawColorPicker = document.querySelector(".drawColorPicker");
 drawColorPicker.addEventListener("input", function(e){
     drawColor = hexToRGB(e.target.value)
     drawColorContainer.style.cssText = "background-color : " + drawColor + ";"
+
+    // Toggle normal mode on color value change
+    normalMode = true;
+    normalModeToggle.classList.add("buttonActive");
+    randomMode = false;
+    randomModeToggle.classList.remove("buttonActive");
+    eraserMode = false;
+    eraserModeToggle.classList.remove("buttonActive");
+    shaderMode = false;
+    shaderModeToggle.classList.remove("buttonActive");
+    colorPickerMode = false;
+    colorPickerModeToggle.classList.remove("buttonActive");
+    drawColor = drawColorPicker.value;
 })
 
 let cellBackgroundColorPicker = document.querySelector(".cellBackgroundColorPicker");
@@ -86,6 +99,7 @@ cellBackgroundColorPicker.addEventListener("input", function(e){
     let tempArray1 = changeColor(rgbStringToArray(cellBackgroundColor), 2);
     gridBackgroundColor = "rgb(" + tempArray1[0] + ", " + tempArray1[1] + ", " + tempArray1[2] + ")";
     grid.style.backgroundColor = gridBackgroundColor;
+    grid.style.borderColor = gridBackgroundColor;
     let tempArray2 = changeColor(rgbStringToArray(cellBackgroundColor), 4);
     chosenHoverColor = "rgb(" + tempArray2[0] + ", " + tempArray2[1] + ", " + tempArray2[2] + ")";
     if (darkInvert) {
@@ -190,13 +204,26 @@ colorChangeSlider.addEventListener("input", function(e) {
         
         let tempArray = rgbStringToArray(getComputedStyle(root).getPropertyValue("--third-color"))
         shaderChangedColor.style.cssText ="background-color : rgb(" + (+tempArray[0] + colorChangeValue) + ", " + (+tempArray[1] + colorChangeValue) + ", " + (+tempArray[2] + colorChangeValue) + ");"
+        
+        // Activate shader when input is modified
+        normalMode = false;
+        normalModeToggle.classList.remove("buttonActive");
+        randomMode = false;
+        randomModeToggle.classList.remove("buttonActive");
+        eraserMode = false;
+        eraserModeToggle.classList.remove("buttonActive");
+        shaderMode = true;
+        shaderModeToggle.classList.add("buttonActive");
+        colorPickerMode = false;
+        colorPickerModeToggle.classList.remove("buttonActive");
     })
 
 // CLICK LISTENERS
 let clickHold = false;
 document.addEventListener("mousedown", function(e){
+    if (e.button === 0) {
     clickHold = true;
-    gridSizeTemp = gridSize;
+    gridSizeTemp = gridSize;}
 })
 document.addEventListener("mouseup", function(e){
     if (gridSizeTemp !== gridSize) {enableDrawing()};
@@ -231,8 +258,10 @@ let showGrid = true;
 showGridToggle.addEventListener("click", function(e){
     showGrid = !showGrid;
     if (showGrid) {grid.style.gap = "1px"
+        grid.style.borderWidth = "1px"
         showGridToggle.textContent = "HIDE GRID"}
     else {grid.style.gap ="0px"
+        grid.style.borderWidth = "0px"
         showGridToggle.textContent = "SHOW GRID"}
     })
 

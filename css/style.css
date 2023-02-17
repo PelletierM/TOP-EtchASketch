@@ -12,8 +12,13 @@
 }
 
 body {
-        background-color: #eeeeee;
-}
+    background-color: #eeeeee;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    flex-direction:column;
+    min-height:100vh;
+    }
 
 p {
     margin:0px;
@@ -26,14 +31,16 @@ button{
     width:100px;
     background-color: var(--main-color);
     box-shadow: rgb(0, 0, 0, 0.4) 0px 2px 5px;
-    transition:0.2s;
-    margin-top:10px;
+    transition:0.1s;
     color:var(--adaptive-text-color);
+    flex-shrink:0;
 }
 
 button:hover {
-    transition:0.3s;
+    transition:0.2s;
     background-color:var(--third-color);
+    transform:translate(0px, -2px);
+    box-shadow: rgb(0, 0, 0, 0.8) 0px 3px;
 }
 
 .buttonActive {
@@ -46,13 +53,14 @@ button:hover {
     }
 
 .main {
-    min-height:100vh;
-    min-width:100vw;
     display:flex;
     justify-content:center;
     align-items:center;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
+    margin: 0px 40px;
+
 }
+
 
 .grid {
     box-sizing:border-box;
@@ -61,27 +69,31 @@ button:hover {
     height: 80vw;
     max-height: 600px;
     display:grid;
+    margin:40px;
     gap: 1px;
     background-color: rgb(128, 128, 128);
-    border-width:2px;
-    border-color:black;
+    border-width:1px;
+    border-color:rgb(128, 128, 128);
     border-style:solid;
     flex-shrink:0;
+    box-shadow: rgb(0, 0, 0, 0.4) 0px 4px 8px
 }
 
+
 .mainMenu {
-    width: 200px;
+    width: 170px;
     height:80vw;
     max-height:600px;
     display:flex;
-    justify-content:space-between;
+    justify-content:flex-start;
     align-items:center;
     flex-direction:column;
     gap:20px;
+    flex-shrink:0;
 }
     .subMenu{
         box-sizing:border-box;
-        width:170px;
+        min-width:170px;
         display:flex;
         flex-direction:column;
         align-items:center;
@@ -89,30 +101,30 @@ button:hover {
         background-color:#ffffff;
         border-radius:20px;
         box-shadow: rgb(0, 0, 0, 0.4) 4px 4px 8px;
+        gap:20px;
     }
         .colorPickers {
-            width:130px;
-            height:130px;
+            width:120px;
+            height:120px;
             display:grid;
-            grid-template-rows:repeat(13, 10px);
-            grid-template-columns: repeat(13, 10px);
-            margin:0px 0px;
+            grid-template-rows: 30px 60px 30px;
+            grid-template-columns: 30px 60px 30px;
 
         }
             .drawColorContainer {
-                grid-area: 1 / 1 / 10 / 10;
+                grid-area: 1 / 1 / 2 / 2;
                 z-index: 2;
                 flex-shrink: 0;
             }
             .backgroundColorContainer {
-                grid-area: 4 / 4 / 13 / 13;
+                grid-area: 2 / 2 / 3 / 3;
                 z-index:1;
                 flex-shrink:0;
             }
             .colorCircleContainer {
-                width:100px;
-                height:100px;
-                border-radius:50px;
+                width:90px;
+                height:90px;
+                border-radius:45px;
                 overflow:hidden;
                 display:flex;
                 justify-content:center;
@@ -126,8 +138,8 @@ button:hover {
             }
 
             .colorCircle {
-                min-width: 120px;
-                min-height:120px;
+                min-width: 100px;
+                min-height:100px;
                 opacity:0;
                 flex-shrink:0;
             }
@@ -137,22 +149,25 @@ button:hover {
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap:10px;
         }
-
+    .shaderMenu {
+        flex-grow: 1;
+    }
         .shaderColors {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             background-color: var(--third-color);
             display: flex;
-            border-radius:50px;
+            border-radius:45px;
             justify-content: center;
             align-items: center;
             transform: rotate(45deg);
             box-shadow: rgb(0, 0, 0, 0.4) 4px 4px 8px;
         }
             .colorHalfCircle {
-                width:50px;
-                height:100px;
+                width:45px;
+                height:90px;
                 margin:0px;
                 padding:0px;
             }
@@ -174,6 +189,17 @@ button:hover {
             width:100px;
             color:red;
         }
+    .gridMenu {
+        flex-direction:row;
+    }
+
+.sliderContainer {
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    gap: 5px;
+    }
 
 
 
