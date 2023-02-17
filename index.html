@@ -13,22 +13,43 @@
 <body>
 <div class="main">
     <div class="grid"></div>
-    <div class="buttons">
-        <button class="eraser">Erase</button>
-        <button class="reset">Reset Board</button>
-        <input type="color" class="colorPicker">
-        <button class="showGridToggle">Show / Hide Grid</button>
-        <button class="normalMode">Normal mode</button>
-        <button class="randomMode">Random mode</button>
-        <button class="shaderMode">Shader</button>
-        <button class="colorPickerMode">Pick color</button>
-        <p class="colorChangeSliderText">0 %</p>
-        <input class="colorChangeSlider" type="range" min="-20" max="20" value="0" />
-        <input type="color" class="cellBackgroundColorPicker">
-    </div>
-    <div>
-        <p class="sliderText">10 X 10</p>
-        <input class="slider" type="range" min="1" max="50" value="10" />
+    <div class="mainMenu">
+        <div class="subMenu drawingMenu">
+            <div class="colorPickers">
+                <div class="colorCircleContainer drawColorContainer">
+                    <input type="color" class="colorCircle drawColorPicker">
+                </div>
+                <div class="colorCircleContainer backgroundColorContainer">
+                    <input type="color" class="colorCircle cellBackgroundColorPicker" value="#ffffff">
+                </div>
+            </div>
+            <div class="drawingModes">
+                <button class="normalMode buttonActive">NORMAL MODE</button>
+                <button class="randomMode">RANDOM MODE</button>
+                <button class="eraserMode">ERASER</button>
+                <button class="colorPickerMode">COLOR PICKER</button>
+            </div>
+        </div>
+        <div class="subMenu shaderMenu">
+            <div class="shaderColors">
+                <div class="colorHalfCircle shaderBaseColor"></div>
+                <div class="colorHalfCircle shaderChangedColor"></div>
+            </div>
+            <p class="colorChangeSliderText">0 %</p>
+            <div class="sliderMenu">        
+                <div class="darken"></div>
+                <input class="colorChangeSlider" type="range" min="-20" max="20" value="0" />
+                <div class="lighten"></div>
+            </div>
+
+            <button class="shaderMode">SHADER</button>
+        </div>
+        <div class="subMenu gridMenu">
+            <p class="sliderText">10 X 10</p>
+            <input class="slider" type="range" min="1" max="50" value="10" />
+            <button class="showGridToggle">HIDE GRID</button>
+            <button class="reset">RESET GRID</button>
+        </div>        
     </div>
 </div>
 </body>

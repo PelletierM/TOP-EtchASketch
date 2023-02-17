@@ -1,12 +1,53 @@
+:root {
+    --main-color: rgb(255, 255, 255);
+    --second-color: rgb(128, 128, 128);
+    --third-color: rgb(192, 192, 192);
+    --adaptive-text-color : rgb(0, 0, 0);
+}
 * {
     font-family: 'Oswald', sans-serif;
     margin:0px;
     padding:0px;
+    accent-color:var(--third-color)
 }
 
+body {
+        background-color: #eeeeee;
+}
+
+p {
+    margin:0px;
+    padding:0px;
+}
+button{
+    height:30px;
+    border-radius:15px;
+    border-width:0px;
+    width:100px;
+    background-color: var(--main-color);
+    box-shadow: rgb(0, 0, 0, 0.4) 0px 2px 5px;
+    transition:0.2s;
+    margin-top:10px;
+    color:var(--adaptive-text-color);
+}
+
+button:hover {
+    transition:0.3s;
+    background-color:var(--third-color);
+}
+
+.buttonActive {
+    background-color:var(--second-color);
+    color:white;
+}
+
+.buttonActive:hover {
+    background-color: var(--second-color);
+    }
+
 .main {
-    height:100vh;
-    width:100vw;
+    min-height:100vh;
+    min-width:100vw;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -14,10 +55,11 @@
 }
 
 .grid {
+    box-sizing:border-box;
     width : 80vw;
-    max-width : 500px;
+    max-width : 600px;
     height: 80vw;
-    max-height: 500px;
+    max-height: 600px;
     display:grid;
     gap: 1px;
     background-color: rgb(128, 128, 128);
@@ -26,5 +68,112 @@
     border-style:solid;
     flex-shrink:0;
 }
+
+.mainMenu {
+    width: 200px;
+    height:80vw;
+    max-height:600px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-direction:column;
+    gap:20px;
+}
+    .subMenu{
+        box-sizing:border-box;
+        width:170px;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        padding:20px;
+        background-color:#ffffff;
+        border-radius:20px;
+        box-shadow: rgb(0, 0, 0, 0.4) 4px 4px 8px;
+    }
+        .colorPickers {
+            width:130px;
+            height:130px;
+            display:grid;
+            grid-template-rows:repeat(13, 10px);
+            grid-template-columns: repeat(13, 10px);
+            margin:0px 0px;
+
+        }
+            .drawColorContainer {
+                grid-area: 1 / 1 / 10 / 10;
+                z-index: 2;
+                flex-shrink: 0;
+            }
+            .backgroundColorContainer {
+                grid-area: 4 / 4 / 13 / 13;
+                z-index:1;
+                flex-shrink:0;
+            }
+            .colorCircleContainer {
+                width:100px;
+                height:100px;
+                border-radius:50px;
+                overflow:hidden;
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                box-shadow: rgb(0, 0, 0, 0.4) 4px 4px 8px;
+            }
+
+            .colorCircleContainer:hover {
+                scale:1.05;
+                transition:0.3s;
+            }
+
+            .colorCircle {
+                min-width: 120px;
+                min-height:120px;
+                opacity:0;
+                flex-shrink:0;
+            }
+        .drawingModes {
+            width: 130px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .shaderColors {
+            width: 100px;
+            height: 100px;
+            background-color: var(--third-color);
+            display: flex;
+            border-radius:50px;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(45deg);
+            box-shadow: rgb(0, 0, 0, 0.4) 4px 4px 8px;
+        }
+            .colorHalfCircle {
+                width:50px;
+                height:100px;
+                margin:0px;
+                padding:0px;
+            }
+            .shaderBaseColor {
+                background-color: var(--third-color);
+                border-top-left-radius: 50px;
+                border-bottom-left-radius: 50px;
+            }
+            .shaderChangedColor{
+                background-color: var(--third-color);
+                border-top-right-radius: 50px;
+                border-bottom-right-radius: 50px;
+                
+            }
+        .colorChangeSlider {
+            width:100px;
+        }
+        .slider {
+            width:100px;
+            color:red;
+        }
+
 
 
