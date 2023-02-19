@@ -341,8 +341,12 @@ function enableDrawing() {
         gridCell.addEventListener("mouseout", mouseOutHover);
         gridCell.addEventListener("mousedown", function(e){selectDrawingCondition()})    
     })
-    if (showGrid) {grid.style.gap = "1px"}
-    else {grid.style.gap ="0px"}
+    if (showGrid) {grid.style.gap = "1px"
+        grid.style.borderWidth = "1px"    
+    }
+    else {grid.style.gap ="0px"
+        grid.style.borderWidth = "0px"
+    }
 }
 
 // ON PAGE LOAD FUNCTIONS

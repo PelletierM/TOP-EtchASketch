@@ -11,50 +11,57 @@
     <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-<div class="main">
-    <div class="grid"></div>
-    <div class="mainMenu">
-        <div class="subMenu drawingMenu">
-            <div class="colorPickers">
-                <div class="colorCircleContainer drawColorContainer">
-                    <input type="color" class="colorCircle drawColorPicker">
+<div class="header"></div>
+<div class="content">
+    <h1>Etch-A-Sketch</h1>
+    <div class="mainContainer">
+        <div class="flexGrowLeft"></div>
+        <div class="main">
+            <div class="grid"></div>
+            <div class="mainMenu">
+                <div class="subMenu drawingMenu">
+                    <div class="colorPickers">
+                        <div class="colorCircleContainer drawColorContainer">
+                            <input type="color" class="colorCircle drawColorPicker">
+                        </div>
+                        <div class="colorCircleContainer backgroundColorContainer">
+                            <input type="color" class="colorCircle cellBackgroundColorPicker" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="drawingModes">
+                        <button class="normalMode buttonActive">NORMAL MODE</button>
+                        <button class="randomMode">RANDOM MODE</button>
+                        <button class="eraserMode">ERASER</button>
+                        <button class="colorPickerMode">COLOR PICKER</button>
+                    </div>
                 </div>
-                <div class="colorCircleContainer backgroundColorContainer">
-                    <input type="color" class="colorCircle cellBackgroundColorPicker" value="#ffffff">
-                </div>
-            </div>
-            <div class="drawingModes">
-                <button class="normalMode buttonActive">NORMAL MODE</button>
-                <button class="randomMode">RANDOM MODE</button>
-                <button class="eraserMode">ERASER</button>
-                <button class="colorPickerMode">COLOR PICKER</button>
+                <div class="subMenu shaderMenu">
+                    <div class="shaderColors">
+                        <div class="colorHalfCircle shaderBaseColor"></div>
+                        <div class="colorHalfCircle shaderChangedColor"></div>
+                    </div>
+                    <div class="sliderContainer">
+                        <p class="colorChangeSliderText">0 %</p>
+                        <div class="sliderMenu">        
+                            <input class="colorChangeSlider" type="range" min="-20" max="20" value="0" />
+                        </div>
+                        <button class="shaderMode">SHADER</button>
+                    </div>
+                </div>      
             </div>
         </div>
-        <div class="subMenu shaderMenu">
-            <div class="shaderColors">
-                <div class="colorHalfCircle shaderBaseColor"></div>
-                <div class="colorHalfCircle shaderChangedColor"></div>
-            </div>
-            <div class="sliderContainer">
-            <p class="colorChangeSliderText">0 %</p>
-                <div class="sliderMenu">        
-                    <div class="darken"></div>
-                    <input class="colorChangeSlider" type="range" min="-20" max="20" value="0" />
-                    <div class="lighten"></div>
-                </div>
-            </div>
-
-            <button class="shaderMode">SHADER</button>
-        </div>      
     </div>
-</div>
-        <div class="subMenu gridMenu">
-            <div class="sliderContainer">
+    <div class="subMenu gridMenu">
+        <div class="sliderContainer">
             <p class="sliderText">10 X 10</p>
-            <input class="slider" type="range" min="1" max="50" value="10" />
-            </div>
-            <button class="showGridToggle">HIDE GRID</button>
-            <button class="reset">RESET GRID</button>
-        </div>  
+            <input class="slider" type="range" min="1" max="40" value="10" />
+        </div>
+        <button class="showGridToggle">HIDE GRID</button>
+        <button class="reset">RESET GRID</button>
+    </div>  
+</div>
+<div class="footer">
+    <p>Copyright &#169; <a href=https://github.com/PelletierM/TOP-EtchASketch>PelletierM</a> 2023</p>
+</div>
 </body>
 </html>
