@@ -20,7 +20,13 @@ let drawColorContainer = document.querySelector(".drawColorContainer");
 drawColorContainer.style.cssText = "background-color : " + drawColor + ";"
 
 let backgroundColorContainer = document.querySelector(".backgroundColorContainer");
-backgroundColorContainer.style.cssText = "background-color : " + cellBackgroundColor + ";"
+backgroundColorContainer.style.cssText = "background-color : var(--cell-background-color);"
+// This resets transition time on click so that all cells have no delay when background color is changed
+backgroundColorContainer.addEventListener("click", function(e){
+  gridCells.forEach(function(gridCell) {
+        gridCell.style.transition = "0s";
+    })  
+})
 
 function hexToRGB(hex) {
     let r = parseInt(hex.slice(1, 3), 16);
@@ -62,12 +68,7 @@ drawColorPicker.addEventListener("input", function(e){
 let cellBackgroundColorPicker = document.querySelector(".cellBackgroundColorPicker");
 cellBackgroundColorPicker.addEventListener("input", function(e){
     cellBackgroundColor = hexToRGB(e.target.value)
-    gridCells.forEach(function(gridCell){
-        if (gridCell.classList.contains("empty")){
-            gridCell.style.cssText = "background-color : " + cellBackgroundColor + "; transition : 0s;"
-        }
-    backgroundColorContainer.style.cssText = "background-color : " + cellBackgroundColor + ";"
-    })
+    root.style.setProperty("--cell-background-color", cellBackgroundColor)
     let darkInvert = false;
     let textInvert = false;
     function changeColor(array, divider) {
@@ -90,7 +91,6 @@ cellBackgroundColorPicker.addEventListener("input", function(e){
             b = b - modifier;
             darkInvert = true;
         }
-
         if (r < 0) {r = 0};
         if (g < 0) {g = 0};
         if (b < 0) {b = 0};
@@ -116,7 +116,7 @@ cellBackgroundColorPicker.addEventListener("input", function(e){
     if (textInvert) {root.style.setProperty("--adaptive-text-color", "rgb(255, 255, 255)")}
     else {root.style.setProperty("--adaptive-text-color", "rgb(0, 0, 0)")}
     
-    let tempArray = rgbStringToArray(getComputedStyle(root).getPropertyValue("--third-color"))
+    let tempArray = rgbStringToArray(chosenHoverColor)
         shaderChangedColor.style.cssText ="background-color : rgb(" + (+tempArray[0] + colorChangeValue) + ", " + (+tempArray[1] + colorChangeValue) + ", " + (+tempArray[2] + colorChangeValue) + ");"
 })
 
@@ -237,7 +237,6 @@ document.addEventListener("dragstart", function(e){
 }) // This prevents grid elements from being dragged, which could alter drawing in some browsers
 
 
-
 // GRID CONFIGURATION
 let gridSizeSlider = document.querySelector(".slider");
 let gridSizeSliderText = document.querySelector(".sliderText")
@@ -277,14 +276,13 @@ function resizeGrid(){
     grid.style.cssText = "grid-template-columns : repeat(" + gridSize + ", 1fr); grid-template-rows : repeat(" + gridSize + ", 1fr)";
     gridCells = document.querySelectorAll(".gridCell");
     gridCells.forEach(function(gridCell) {
-        gridCell.style.cssText = "background-color : " + cellBackgroundColor + ";";
+        gridCell.style.cssText = "background-color : var(--cell-background-color);";
     })
     grid.style.backgroundColor = gridBackgroundColor;
 }
 
 function enableDrawing() {
     gridCells.forEach(function(gridCell) {
-        
         function selectDrawingCondition(){
             if (normalMode === true) {gridCell.style.cssText = "background-color : " + drawColor + "; transition : 0s;"
                 gridCell.classList.remove("empty")
@@ -295,7 +293,7 @@ function enableDrawing() {
                 gridCell.classList.remove("empty")
                 gridCell.classList.add("filled")
             }
-            else if (eraserMode) {gridCell.style.cssText = "background-color : " + cellBackgroundColor + "; transition : 0s;";
+            else if (eraserMode) {gridCell.style.cssText = "background-color : var(--cell-background-color); transition : 0s;";
                 gridCell.classList.remove("filled");
                 gridCell.classList.add("empty");
             }
@@ -334,10 +332,10 @@ function enableDrawing() {
 
         function mouseOutHover() {
             if (gridCell.classList.contains("filled")) {}
-            else {gridCell.style.cssText = "background-color : " + cellBackgroundColor + "; transition : 0.3s;"};
+            else {gridCell.style.cssText = "background-color : var(--cell-background-color); transition : 0.3s;"};
         }
 
-        gridCell.addEventListener("mouseover", mouseOverHover) 
+        gridCell.addEventListener("mouseover", mouseOverHover); 
         gridCell.addEventListener("mouseout", mouseOutHover);
         gridCell.addEventListener("mousedown", function(e){selectDrawingCondition()})    
     })

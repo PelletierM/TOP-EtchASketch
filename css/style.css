@@ -3,6 +3,7 @@
     --second-color: rgb(128, 128, 128);
     --third-color: rgb(192, 192, 192);
     --adaptive-text-color : rgb(0, 0, 0);
+    --cell-background-color : rgb(255, 255, 255);
 }
 * {
     font-family: 'Oswald', sans-serif;
